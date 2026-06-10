@@ -1,66 +1,137 @@
-# This is Michael's portion for the GUI, I'm trying to work on the presentation side of things and help with the GUI as
-
-#Group 3's Project!
-#Michael Dean's portion
-
 import calendar
 import tkinter as tk
 
-#Starts the main window
+#Sets sunday as the starting day for the calendar
+calendar.setfirstweekday(calendar.SUNDAY)
+
+#Starts up the main window
 main_w = tk.Tk()
-main_w.title("Team 3's Event Calendar!")
-main_w.geometry("900x650")
+main_w.title("Team 3's Event Calendar")
+main_w.geometry("900x900")
 
 #month list for the calendar
-months = [ "January", "February", "March", "April", "May", "June",
- "July", "August", "September", "October", "November", "December",]
+months = [
+    "January", "February", "March", "April", "May", "June",
+    "July", "August", "September", "October", "November", "December"
+]
 
-#sets the year
+#holiday list in dictionary (X,Y) format. X=month Y=day
+holidays = {
+    "Chinese and Japanese": {
+        (2, 17): "Chinese New Year",
+        (7, 20): "Marine Day"
+    },
+    "Religious": {
+        (6, 24): "Nativity of St John",
+        (7, 24): "Pioneer Day"
+    },
+    "USA Holidays": {
+        (7, 4): "Fourth of July"
+    }
+}
+
+# Color Palettes
+category_colors = {
+    "Chinese and Japanese": {"bg": "lightpink", "fg": "darkred"},
+    "Religious": {"bg": "yellow", "fg": "purple"},
+    "USA Holidays": {"bg": "lightblue", "fg": "darkblue"}
+}
+
+#Month Color Palettes
+month_colors = {
+    "January": "#8E8E8E",    # Grey
+    "February": "#BE132D",   # Chinese New Year Red
+    "March": "#B5C7EB",      # Marchy Blue
+    "April": "#55C233",      # Grassy Green
+    "May": "#50C878",        # Emerald
+    "June": "#C2E4FA",       # Summer Blue
+    "July": "#00B2DA",       # Ocean Blue
+    "August": "#5d8ac0",     # Grey Blue
+    "September": "#ce796b",  # Brown Red for Fall
+    "October": "#ED820E",    # Orange for Halloween
+    "November": "#EFBF04",   # Gold/Earth Color for Thanksgiving
+    "December": "#8ABB6D"    # Green for Christmas
+}
+
+#sets the current year
 current_year = 2026
 
-#this makes the grid frame
+#makes the grid frame for calendar days
 cal_frame = tk.Frame(main_w)
 cal_frame.pack(pady=20)
 
-#the def for the calendar logic
+#stores on and off toggle
+check_tog = {}
+
+#makes frame for the checkmark toggles
+check_frame = tk.LabelFrame(main_w, text="Event Types", padx=5, pady=5)
+check_frame.pack(pady=5)
+
 def update_calendar(*args):
-    #clears out any previous month's grid widgets
+    #clears widget frames when changing months
     for widget in cal_frame.winfo_children():
         widget.destroy()
 
-    #gets selected month string and convert to index (1-12)
+    #gets the selected month string and converts to index (1-12)
     month_name = click.get()
     month_index = months.index(month_name) + 1
 
-    #draws day headers
-    days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
+    current_bg = month_colors.get(month_name, "SystemButtonFace")
+
+    main_w.config(bg=current_bg)
+    cal_frame.config(bg=current_bg)
+    check_frame.config(bg=current_bg)
+
+    #makes the day headers and sets them
+    days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
     for col, day in enumerate(days):
-        lbl = tk.Label(cal_frame, text=day, font=("Arial", 12, "bold"))
+        lbl = tk.Label(cal_frame, text=day, font=("Arial", 12, "bold"), bg=current_bg)
         lbl.grid(row=0, column=col, padx=10, pady=5)
 
-    #fetch calculation matrix for the specific month
     month_cal = calendar.monthcalendar(current_year, month_index)
 
-    #populates grid with day buttons or labels
+    #gives the grid day buttons
     for row_idx, week in enumerate(month_cal):
         for col_idx, day_num in enumerate(week):
-            if day_num != 0: #0 represents empty space padding the week
+            if day_num != 0:
+                button_text = str(day_num)
+                button_fg = "black"
+                button_bg = "SystemButtonFace"
 
-                #this creates the button for each day. Will make it do something later!
-                day_btn = tk.Button( cal_frame, text=str(day_num), width=6, height=4, relief="raised")
+                #checks the toggle, and gives it the color indicated in category_colors
+                for cat, var in check_tog.items():
+                    if var.get():
+                        if (month_index, day_num) in holidays[cat]:
+                            holiday_name = holidays[cat][(month_index, day_num)]
+                            button_text = f"{day_num}\n{holiday_name}"
+
+                            button_bg = category_colors[cat]["bg"]
+                            button_fg = category_colors[cat]["fg"]
+
+                #makes each day a button
+                day_btn = tk.Button(cal_frame, text=button_text, fg=button_fg, bg=button_bg, width=15, height=4, relief="raised")
                 day_btn.grid(row=row_idx + 1, column=col_idx, padx=5, pady=5)
 
-#This makes the drop down menu for each month
+#sets up the toggleboxes taken from holidays
+for category in holidays.keys():
+    check_tog[category] = tk.BooleanVar(value=True)
+    check = tk.Checkbutton(
+        check_frame,
+        text=category,
+        variable=check_tog[category],
+        command=update_calendar
+    )
+    check.pack(side="right", padx=5)
+
+#configures the drop down menu for months
 click = tk.StringVar()
 click.set(months[0])
-#automatically refreshes calander whenever click variable changes in the app
 click.trace_add("write", update_calendar)
 
-#embeds optionmenu
 drop_m = tk.OptionMenu(main_w, click, *months)
 drop_m.pack(pady=10)
 
-#makes the calender for the program
+#generates calendar
 update_calendar()
 
 #starts the window for the program
