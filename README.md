@@ -124,3 +124,9 @@ Some future improvements could include:
 ## Current Purpose of This Repository
 
 This repository is mainly for safe testing and organization. It helps keep the current group code separate from new feature testing, so changes can be reviewed before being added to the main project.
+
+## Sources
+
+Michael's:
+Elder, J. (2019, January 10). Python Gui’s with tkinter. YouTube. https://www.youtube.com/playlist?list=PLCC34OHNcOtoC6GglhF3ncJ5rLwQrLGnV  Michael did not watch every single video in this series, but it did help a lot with the project.
+YouTube. (2023, May 1). Harvard CS50’s Introduction to Programming with Python – Full University Course. YouTube. https://www.youtube.com/watch?v=nLRL_NcnK-4&list=PLhXNRXKF7IWQDafdbCOsUaCl8nIb6IQMH&index=2&t=18120s Michael did not completely watch this video either, but it was helpful suplimental material
