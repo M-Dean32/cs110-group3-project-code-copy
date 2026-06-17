@@ -74,6 +74,12 @@ This feature fits with the main project because the calendar helps users find ev
 
 These are Python files, so they need to be run with Python.
 
+### The Full program with all three sections of code combined into one streamlined product. Run Event Calendar App.
+
+```bash
+python3 event_calendar_app.py
+```
+
 ### Run the event preparation guide
 
 ```bash
@@ -92,14 +98,6 @@ python3 calendar_gui.py
 python3 weather.py
 ```
 
-## Notes About the Weather API
-
-The weather file uses an API key. For safety, the API key should not be posted publicly. In this copy, the API key should either be replaced with a placeholder or kept private.
-
-Example:
-
-```python
-API_KEY = "PASTE_API_KEY_HERE"
 ```
 
 ## Adam's Contribution
